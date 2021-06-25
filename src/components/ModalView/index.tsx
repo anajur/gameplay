@@ -1,29 +1,44 @@
 import React, { ReactNode } from 'react';
+import {
+  View,
+  Modal,
+  ModalProps,
+  TouchableWithoutFeedback,
+} from 'react-native';
+//TouchableWithoutFeedback para identificar click do user em qualquer espaço da tela
 
-import { View, ModalProps, Modal } from 'react-native';
-import { Background } from '../../components/Background';
 import { styles } from './styles';
 
+import { Background } from '../Background';
+
+
 type Props = ModalProps & {
-    children: ReactNode;
+  children: ReactNode;
+  closeModal: () => void;
 }
 
-export function ModalView({ children, ...rest }: Props) {
-
-    return (
-        <Modal
-            transparent
-            animationType="slide"
-            {...rest}
-        >
-            <View style={styles.overlay}>
-                <View style={styles.container}>
-                    <Background>
-                        <View style={styles.bar} />
-                        {children}
-                    </Background>
-                </View>
-            </View>
-        </Modal>
-    )
+export function ModalView({
+  children, 
+  closeModal,
+  ...rest
+}: Props){
+  return (
+    <Modal
+      transparent
+      animationType="slide"
+      statusBarTranslucent
+      {...rest}
+    >
+      <TouchableWithoutFeedback onPress={closeModal}>
+        <View style={styles.overlay}>
+          <View style={styles.container}>
+            <Background>
+              <View style={styles.bar} />
+              {children}
+            </Background>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
+  );
 }
