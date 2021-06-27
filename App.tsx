@@ -7,7 +7,10 @@ import { StatusBar, LogBox } from 'react-native';
 import { Background } from './src/components/Background';
 import AppLoading from 'expo-app-loading';
 import { AuthProvider } from './src/hooks/auth';
-LogBox.ignoreLogs(['You are not currently signed in to Expo on your development machine.'])
+LogBox.ignoreLogs([
+'You are not currently signed in to Expo on your development machine.', 
+'Cannot connect to the Metro server.',
+'VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.'])
 import { Routes } from './src/routes';
 export default function App() {
   const [fontsLoaded] = useFonts({
