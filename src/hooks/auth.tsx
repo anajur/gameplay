@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import {
-    REDIRECT_URI,
-    SCOPE,
-    RESPONSE_TYPE,
-    CDN_IMAGE,
-    CLIENT_ID
-} from "../configs";
+
 import { api } from "../services/api";
 import * as AuthSession from 'expo-auth-session';
+
+const { REDIRECT_URI } = process.env;
+const { SCOPE } = process.env;
+const { RESPONSE_TYPE } = process.env;
+const { CDN_IMAGE } = process.env;
+const { CLIENT_ID } = process.env;
 
 type User = {
     id: string;
@@ -20,11 +20,10 @@ type User = {
 
 type AuthorizationResponse = AuthSession.AuthSessionResult & {
     params: {
-        access_token: string;
+        access_token?: string;
+        error?: string;
     }
 }
-
-
 
 type AuthContextData = {
     user: User;
@@ -35,6 +34,7 @@ type AuthContextData = {
 type AuthProviderProps = {
     children: ReactNode;
 }
+
 export const AuthContext = createContext({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
@@ -51,24 +51,24 @@ function AuthProvider({ children }: AuthProviderProps) {
             const { type, params } = await AuthSession
                 .startAsync({ authUrl }) as AuthorizationResponse;
 
-            if (type === "success") {
+            if (type === "success" && !params.error) {
                 api.defaults.headers.authorization = `Bearer ${params.access_token}`;
 
                 const userInfo = await api.get('/users/@me');
 
                 const firstName = userInfo.data.username.split(' ')[0];
                 userInfo.data.avatar = `${CDN_IMAGE}/avatars/${userInfo.data.id}/${userInfo.data.avatar}.png`;
+
                 setUser({
                     ...userInfo.data,
                     firstName,
                     token: params.access_token
                 });
-                setLoading(false)
-            } else {
-                setLoading(false);
             }
         } catch (error) {
             throw new Error('Não foi possível autenticar');
+        } finally {
+            setLoading(false);
         }
 
     }
