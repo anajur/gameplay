@@ -18,6 +18,8 @@ import { useRoute } from '@react-navigation/native';
 import { AppointmentProps } from '../../components/Appointment';
 import * as Linking from 'expo-linking';
 import { api } from '../../services/api';
+import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 type Params = {
     guildSelected: AppointmentProps;
@@ -37,6 +39,7 @@ export function AppointmentDetails() {
     const { guildSelected } = route.params as Params;
     const [widget, setWidget] = useState<GuildWidget>({} as GuildWidget);
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
 
     async function fetchWidget() {
         try {
@@ -63,6 +66,10 @@ export function AppointmentDetails() {
             url: widget.instant_invite
         });
     }
+    function handleEdit() {
+        navigation.navigate('EditGuild', { guildSelected, widget });
+
+    }
     useEffect(() => {
         fetchWidget();
     }, []);
@@ -73,15 +80,27 @@ export function AppointmentDetails() {
                 <Header
                     title="Detalhes"
                     action={guildSelected.guild.owner &&
-                        <BorderlessButton onPress={handleShareInvitation}>
-                            <Fontisto
-                                name="share"
-                                size={24}
-                                color={theme.colors.primary}
-                            />
-                        </BorderlessButton>
+                        <View style={styles.buttons}>
+                            <BorderlessButton
+                                onPress={handleShareInvitation}>
+                                <Fontisto
+                                    name="share"
+                                    size={24}
+                                    color={theme.colors.primary}
+                                />
+                            </BorderlessButton>
+                            <BorderlessButton style={styles.settings}>
+                                <AntDesign
+                                    onPress={handleEdit}
+                                    name="setting"
+                                    size={24}
+                                    color={theme.colors.primary}
+                                />
+                            </BorderlessButton>
+                        </View>
                     }
                 />
+
                 <ImageBackground
                     style={styles.banner}
                     source={BannerImg}

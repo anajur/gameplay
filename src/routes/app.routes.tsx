@@ -2,10 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import { Home } from "../screens/Home";
-import { SignIn } from "../screens/SignIn";
 import { theme } from "../global/styles/theme";
 import { AppointmentDetails } from "../screens/AppointmentDetails";
 import { AppointmentCreate } from "../screens/AppointmentCreate";
+import { EditGuild } from "../screens/EditGuild";
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -30,6 +30,10 @@ export function AppRoutes() {
             <Screen
                 name="AppointmentCreate"
                 component={AppointmentCreate}
+            />
+            <Screen
+                name="EditGuild"
+                component={EditGuild}
             />
         </Navigator>
     )

@@ -77,7 +77,7 @@ export function AppointmentCreate() {
     }
     return (
         <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior="position" enabled
             style={styles.container}
         >
             <Background>
